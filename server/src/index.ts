@@ -1,13 +1,13 @@
 import express from 'express'
 import http from 'http'
 import mongoose from 'mongoose'
-import { Server } from 'socket.io'
+// import { Server } from 'socket.io'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
 import elevatorRoutes from './routes/elevatorRoutes'
 import { getElevatorStateFromDB } from './service/elevatorService'
-import { socketHandler } from './socketHandler'
+// import { socketHandler } from './socketHandler'
 
 dotenv.config()
 
@@ -17,7 +17,7 @@ const ELEVATOR_ROUTE = '/api/elevator'
 
 const app = express()
 const server = http.createServer(app)
-const io = new Server(server)
+// const io = new Server(server)
 
 app.use(cors())
 app.use(express.json())
@@ -33,7 +33,7 @@ mongoose
     await getElevatorStateFromDB()
 
     // Use the socket handler for WebSocket events
-    socketHandler(io)
+    // socketHandler(io)
 
     // Start the server
     server.listen(PORT, () => {
