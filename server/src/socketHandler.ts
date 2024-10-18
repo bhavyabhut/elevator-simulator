@@ -2,8 +2,7 @@ import { Server, Socket } from 'socket.io'
 import Elevator from './models/elevatorModel'
 import {
   addRequestToQueue,
-  processElevatorRequests,
-  getElevatorStateFromDB
+  processElevatorRequests
 } from './service/elevatorService'
 
 // Function to handle socket connections
@@ -12,9 +11,9 @@ export const socketHandler = (io: Server) => {
     console.log('A user connected:', socket.id)
 
     // Send initial elevator state to the client
-    getElevatorStateFromDB().then((state) => {
-      socket.emit('elevatorState', state)
-    })
+    // getElevatorStateFromDB().then((state) => {
+    //   socket.emit('elevatorState', state)
+    // })
 
     // Handle the call elevator event via WebSocket
     socket.on('callElevator', async (floor: number) => {

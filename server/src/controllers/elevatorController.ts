@@ -28,7 +28,7 @@ export const callElevator = async (req: Request, res: Response) => {
   try {
     const { floor } = req.body
 
-    if (typeof floor !== 'number' || floor < 0 || floor > TOTAL_FLOORS) {
+    if (typeof floor !== 'number' || floor < 1 || floor > TOTAL_FLOORS) {
       return res.status(400).json({ message: 'Invalid floor number.' })
     }
 
@@ -41,6 +41,7 @@ export const callElevator = async (req: Request, res: Response) => {
 
     // Add the floor request to the queue
     const updatedElevator = await addRequestToQueue(elevator, floor)
+    console.log('🚀 ~ callElevator ~ updatedElevator:', updatedElevator)
 
     // Return response immediately (non-blocking)
     res.json({

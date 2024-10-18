@@ -11,7 +11,7 @@ import { socketHandler } from './socketHandler'
 
 dotenv.config()
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3001
 const MONGO_URI = process.env.MONGO_URI || ''
 const ELEVATOR_ROUTE = '/api/elevator'
 
