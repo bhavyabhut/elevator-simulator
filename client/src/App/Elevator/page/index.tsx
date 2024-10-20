@@ -33,18 +33,27 @@ const ElevatorSimulator = () => {
     const { currentFloor, doorsOpen, moving, targetFloor, totalFloors, direction } = elevator;
 
     return (
-        <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-50 to-gray-200">
-            <div className="flex space-x-8">
-                <div className="flex space-x-8">
-                    <div className="w-[500px] bg-white rounded-lg shadow-lg border border-gray-200">
-                        <Building
-                            totalFloors={totalFloors}
-                            currentFloor={currentFloor}
-                            moveElevator={moveElevator}
-                            direction={direction}
-                            targetFloor={targetFloor}
-                        />
-                    </div>
+        <div className="min-h-screen flex flex-col md:flex-row justify-center items-center bg-gradient-to-br from-gray-50 to-gray-200">
+            <div className="w-full md:w-auto mb-6 md:mb-0 md:hidden sm:block">
+                <ControlPanel
+                    currentFloor={currentFloor}
+                    targetFloor={targetFloor}
+                    moving={moving}
+                    doorOpen={doorsOpen}
+                />
+            </div>
+            <div className="md:flex grid grid-cols-[3fr_1fr]  md:flex-row space-y-4 md:space-y-0 md:space-x-8">
+                <div className="w-full md:w-[500px] bg-white rounded-lg shadow-lg border border-gray-200">
+                    <Building
+                        totalFloors={totalFloors}
+                        currentFloor={currentFloor}
+                        moveElevator={moveElevator}
+                        direction={direction}
+                        targetFloor={targetFloor}
+                    />
+                </div>
+
+                <div className="w-full md:w-auto">
                     <ElevatorColumn
                         totalFloors={totalFloors}
                         currentFloor={currentFloor}
@@ -53,7 +62,7 @@ const ElevatorSimulator = () => {
                     />
                 </div>
             </div>
-            <div className="mx-10 ">
+            <div className="mx-10 md:block hidden">
                 <ControlPanel
                     currentFloor={currentFloor}
                     targetFloor={targetFloor}

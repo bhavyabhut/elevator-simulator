@@ -19,7 +19,7 @@ const ElevatorColumn = ({
         totalFloors === currentFloor
             ? 0
             : currentFloor === 1
-              ? totalHeight - floorHeight
+              ? totalHeight - floorHeight - 16
               : (totalFloors - currentFloor) * floorHeight + (totalFloors - currentFloor) * 16;
     return (
         <div

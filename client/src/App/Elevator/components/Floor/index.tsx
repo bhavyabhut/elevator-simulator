@@ -19,7 +19,7 @@ const Floor: React.FC<FloorProps> = ({
     const disabled = floorNumber === currentFloor;
     return (
         <div
-            className="bg-gray-200 rounded-xl p-4 flex items-center justify-between mb-4 shadow-md"
+            className="bg-gray-200 rounded-xl p-4 flex items-center justify-between mb-4 shadow-md w-full"
             style={{ height: `${height}px` }}>
             <div className="text-gray-700 font-semibold text-lg">Floor {floorNumber}</div>
             <div className="flex items-center space-x-2">
@@ -32,10 +32,10 @@ const Floor: React.FC<FloorProps> = ({
                         <span>{currentFloor}</span>
                     </motion.div>
                 </div>
-                <div className="flex items-center justify-center flex-col">
+                <div className="flex flex-col space-y-1">
                     {floorNumber !== totalFloors && (
                         <button
-                            className={`w-10 h-10 mb-1 rounded-full flex items-center justify-center ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                 isUpPressed
                                     ? 'border bg-gradient-to-r from-green-400 to-green-200 border-indigo-400 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-purple-400 to-indigo-400 text-white'
@@ -52,11 +52,11 @@ const Floor: React.FC<FloorProps> = ({
                     )}
                     {floorNumber !== 1 && (
                         <button
-                            className={`w-10 h-10 mb-1 rounded-full flex items-center justify-center  ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center  ${
                                 isDownPressed
                                     ? 'border bg-gradient-to-r from-green-400 to-green-200 border-indigo-400 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-purple-400 to-indigo-400 text-white'
-                            } ${disabled && 'cursor-not-allowed'}  shadow-lg`}
+                            } ${disabled && 'cursor-not-allowed'} shadow-lg`}
                             onClick={() => {
                                 if (!isDownPressed && !disabled) {
                                     moveElevator(floorNumber);
