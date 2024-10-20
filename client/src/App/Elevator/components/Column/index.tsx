@@ -33,8 +33,8 @@ const ElevatorColumn = ({
                 }}
                 animate={{
                     top:
-                        targetFloor !== null
-                            ? `${(totalFloors - targetFloor) * floorHeight + (totalFloors - currentFloor) * 16}px` // Adjust for target floor
+                        targetFloor !== null && !doorOpen
+                            ? `${(totalFloors - targetFloor) * floorHeight + (totalFloors - currentFloor) * 16}px`
                             : `${elevatorBoxTopPosition}px`
                 }}
                 transition={{

@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Elevator } from '../types';
 
 export const fetchElevatorStateAPI = async (): Promise<Elevator | undefined> => {

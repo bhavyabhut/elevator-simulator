@@ -10,6 +10,7 @@
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
     "start:server": "tsc -p server/tsconfig.json && node server/dist/index.js",
+    "build:client": "cd client && npm run build",
     "start:client": "cd client && npm start",
     "format": "prettier --write .",
     "lint": "eslint . ",
