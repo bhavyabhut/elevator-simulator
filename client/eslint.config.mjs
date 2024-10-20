@@ -14,10 +14,7 @@ export default [
             globals: globals.browser,
             parser: tsParser,
             ecmaVersion: 2021,
-            sourceType: 'module',
-            ecmaFeatures: {
-                jsx: true
-            }
+            sourceType: 'module'
         },
         plugins: {
             react: pluginReact,
@@ -52,10 +49,5 @@ export default [
                 typescript: true
             }
         }
-    },
-    // Extend other configurations
-    pluginJs.configs.recommended,
-    ...tseslint.configs.recommended,
-    prettierConfig,
-    pluginReact.configs.recommended
+    }
 ];

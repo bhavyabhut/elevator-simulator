@@ -7,11 +7,13 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
-    "start:server": "tsc -p server/tsconfig.json && node server/dist/index.js",
+    "start:server:dev": "cd server && npm run dev",
+    "build:server": "cd server && npm build",
+    "start:server": "cd server && npm start",
     "build:client": "cd client && npm run build",
     "start:client": "cd client && npm start",
+    "install:client": "cd client && npm install",
     "format": "prettier --write .",
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix "
