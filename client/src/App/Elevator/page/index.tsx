@@ -1,74 +1,58 @@
-import { useState, useEffect } from 'react';
-import Floor from '../components/Floor';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
 import ElevatorColumn from '../components/Column';
 import ControlPanel from '../components/ControlPanel';
 import { Elevator } from '../../../types';
 import { fetchElevatorStateAPI, postElevatorCallAPI } from '../../../api';
-import { TOTAL_FLOOR_HEIGHT } from '../../../constant';
+import LoadingScreen from '../components/Loading';
+import Building from '../components/Building';
 
 const ElevatorSimulator = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [elevatorData, setElevatorData] = useState<Elevator>();
-    console.log('🚀 ~ ElevatorSimulator ~ elevatorData:', elevatorData);
+    const queryClient = useQueryClient();
+    const { data: elevator, isLoading } = useQuery({
+        queryKey: ['elevatorState'],
+        queryFn: fetchElevatorStateAPI,
+        refetchInterval: 1000,
+        staleTime: 1000
+    });
 
     const moveElevator = async (floor: number) => {
         try {
-            const response = await postElevatorCallAPI(floor);
-            if (response && response.data && response.data.elevator) {
-                setElevatorData(response.data.elevator);
+            const elevator = await postElevatorCallAPI(floor);
+            if (elevator) {
+                queryClient.setQueryData(['elevatorState'], (_: Elevator) => elevator);
             }
         } catch (error) {
-            console.error('Error calling the elevator:', error);
+            console.error('Error moving elevator:', error);
         }
     };
 
-    const fetchElevatorState = async (isInitialCall?: boolean) => {
-        if (isInitialCall) setIsLoading(true);
-        const response = await fetchElevatorStateAPI();
-        const elevatorData = response?.data;
-        console.log('🚀 ~ fetchElevatorState ~ elevatorData:', elevatorData);
-        setElevatorData(elevatorData);
-        if (isInitialCall && isLoading) setIsLoading(false);
-    };
+    if (isLoading || !elevator) return <LoadingScreen />;
 
-    useEffect(() => {
-        fetchElevatorState(true);
-    }, []);
-
-    useEffect(() => {
-        const intervalId = setInterval(fetchElevatorState, 1000); // Fetch every 2 seconds
-        return () => clearInterval(intervalId); // Cleanup the interval on unmount
-    }, []);
-
-    if (isLoading || !elevatorData) return <>Loading....</>;
-
-    const { currentFloor, doorsOpen, moving, targetFloor, totalFloors } = elevatorData;
+    const { currentFloor, doorsOpen, moving, targetFloor, totalFloors, direction } = elevator;
 
     return (
         <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-50 to-gray-200">
             <div className="flex space-x-8">
                 <div className="flex space-x-8">
                     <div className="w-96 bg-white rounded-lg shadow-lg border border-gray-200">
-                        {Array.from({ length: totalFloors }, (_, i) => totalFloors - i).map(
-                            (floor) => (
-                                <Floor
-                                    key={floor}
-                                    floorNumber={floor}
-                                    currentFloor={currentFloor}
-                                    moveElevator={moveElevator}
-                                    height={TOTAL_FLOOR_HEIGHT}
-                                />
-                            )
-                        )}
+                        <Building
+                            totalFloors={totalFloors}
+                            currentFloor={currentFloor}
+                            moveElevator={moveElevator}
+                            direction={direction}
+                            targetFloor={targetFloor}
+                        />
                     </div>
                     <ElevatorColumn
                         totalFloors={totalFloors}
                         currentFloor={currentFloor}
                         targetFloor={targetFloor}
                         doorOpen={doorsOpen}
-                        moving={moving}
                     />
                 </div>
+            </div>
+            <div className="mx-10 ">
                 <ControlPanel
                     currentFloor={currentFloor}
                     targetFloor={targetFloor}

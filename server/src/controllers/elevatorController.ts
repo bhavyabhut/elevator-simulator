@@ -44,10 +44,7 @@ export const callElevator = async (req: Request, res: Response) => {
     console.log('🚀 ~ callElevator ~ updatedElevator:', updatedElevator)
 
     // Return response immediately (non-blocking)
-    res.json({
-      message: 'Request added to queue, elevator will move shortly.',
-      elevator: updatedElevator
-    })
+    res.json(updatedElevator)
 
     // Trigger request processing asynchronously
     await processElevatorRequests()

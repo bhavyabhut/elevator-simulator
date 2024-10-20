@@ -6,14 +6,12 @@ const ElevatorColumn = ({
     currentFloor,
     targetFloor,
     doorOpen,
-    moving,
     totalFloors
 }: {
-    currentFloor: number; // This should be 1-indexed
-    targetFloor: number | null; // This can also be 1-indexed or null
+    currentFloor: number;
+    targetFloor: number | null;
     doorOpen: boolean;
-    moving: boolean;
-    totalFloors: number; // Total floors, 1-indexed
+    totalFloors: number;
 }) => {
     const floorHeight = TOTAL_FLOOR_HEIGHT;
     const totalHeight = totalFloors * floorHeight + totalFloors * 16;
@@ -26,24 +24,21 @@ const ElevatorColumn = ({
     return (
         <div
             className="relative w-32 bg-blue-800 rounded-lg shadow-lg border border-gray-300"
-            style={{ height: `${totalHeight}px` }} // Correct height based on floors and margins
-        >
-            {/* Elevator box */}
-
+            style={{ height: `${totalHeight}px` }}>
             <motion.div
                 className="absolute w-full"
                 style={{
-                    top: `${elevatorBoxTopPosition}px`, // Adjusted position
+                    top: `${elevatorBoxTopPosition}px`,
                     height: `${floorHeight}px`
                 }}
                 animate={{
                     top:
                         targetFloor !== null
                             ? `${(totalFloors - targetFloor) * floorHeight + (totalFloors - currentFloor) * 16}px` // Adjust for target floor
-                            : `${elevatorBoxTopPosition}px` // Stay at current position when idle
+                            : `${elevatorBoxTopPosition}px`
                 }}
                 transition={{
-                    duration: Math.abs(currentFloor - (targetFloor || 0)) * TIME_TO_REACH_FLOOR, // No animation when idle
+                    duration: Math.abs(currentFloor - (targetFloor || 0)) * TIME_TO_REACH_FLOOR,
                     ease: 'linear'
                 }}>
                 <ElevatorBox doorOpen={doorOpen} />

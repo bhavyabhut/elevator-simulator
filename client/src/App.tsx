@@ -1,9 +1,13 @@
-import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import ElevatorSimulator from './App/Elevator/page';
 
-function App() {
-    return <ElevatorSimulator />;
-}
+const queryClient = new QueryClient();
+
+const App = () => (
+    <QueryClientProvider client={queryClient}>
+        <ElevatorSimulator />
+    </QueryClientProvider>
+);
 
 export default App;

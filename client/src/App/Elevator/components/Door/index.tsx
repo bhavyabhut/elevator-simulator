@@ -5,12 +5,12 @@ const ElevatorDoors = ({ doorOpen }: { doorOpen: boolean }) => {
         <div className="relative w-full h-full flex justify-center">
             <motion.div
                 className="absolute left-0 h-full w-1/2 bg-blue-300"
-                animate={{ x: doorOpen ? '-50%' : '0%' }} // Open doors
+                animate={{ x: doorOpen ? '-50%' : '0%' }}
                 transition={{ duration: 0.8 }}
             />
             <motion.div
                 className="absolute right-0 h-full w-1/2 bg-blue-300"
-                animate={{ x: doorOpen ? '50%' : '0%' }} // Open doors
+                animate={{ x: doorOpen ? '50%' : '0%' }}
                 transition={{ duration: 0.8 }}
             />
         </div>
