@@ -7,7 +7,6 @@ import {
 } from '../service/elevatorService'
 import { MESSAGES } from '../constant/errors'
 
-// API to get the elevator state
 export const getElevatorState = async (req: Request, res: Response) => {
   try {
     const elevator = await Elevator.findOne()
@@ -23,7 +22,6 @@ export const getElevatorState = async (req: Request, res: Response) => {
   }
 }
 
-// API to call the elevator to a specific floor
 export const callElevator = async (req: Request, res: Response) => {
   try {
     const { floor } = req.body

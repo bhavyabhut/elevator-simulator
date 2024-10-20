@@ -52,7 +52,7 @@ export const addRequestToQueue = async (elevator: IElevator, floor: number) => {
 
     if (Object.keys(updates).length > 0) {
       elevator = await updateElevatorState(updates)
-      const { direction, targetFloor } = getInitialDirection(elevator)
+      const { direction, targetFloor } = getDirectionAndTargetFloor(elevator)
 
       if (
         targetFloor === elevator.targetFloor &&
@@ -61,7 +61,7 @@ export const addRequestToQueue = async (elevator: IElevator, floor: number) => {
         return elevator
       else if (
         direction === elevator.direction ||
-        elevator.targetFloor === null
+        (elevator.targetFloor === null && targetFloor)
       )
         return await updateElevatorState({
           targetFloor
@@ -73,7 +73,7 @@ export const addRequestToQueue = async (elevator: IElevator, floor: number) => {
   }
 }
 
-export const getInitialDirection = (
+export const getDirectionAndTargetFloor = (
   elevator: IElevator
 ): { direction: Direction; targetFloor: number | null } => {
   try {
@@ -113,7 +113,7 @@ export const getInitialDirection = (
     return { direction: null, targetFloor: null }
   } catch (error) {
     console.error('Error getting initial direction:', error)
-    return { direction: null, targetFloor: null } // Fallback to null on error
+    return { direction: null, targetFloor: null }
   }
 }
 
@@ -122,14 +122,14 @@ export const processElevatorRequests = async () => {
   try {
     let elevator = await getElevatorStateFromDB()
 
-    if (elevator.moving) {
+    if (elevator.moving || elevator.doorsOpen) {
       console.log('Elevator is already moving, skipping request processing.')
       return
     }
 
     // Determine the initial direction if not already set
     if (!elevator.direction) {
-      const { direction, targetFloor } = getInitialDirection(elevator)
+      const { direction, targetFloor } = getDirectionAndTargetFloor(elevator)
       elevator = await updateElevatorState({
         direction,
         targetFloor,
@@ -187,7 +187,7 @@ const moveElevatorToFloor = async (): Promise<void> => {
         clearInterval(interval)
         resolve()
       }
-    }, TIME_TO_REACH_FLOOR * 1000) // 3 seconds per floor
+    }, TIME_TO_REACH_FLOOR * 1000)
   })
 }
 
@@ -196,7 +196,7 @@ const elevatorArriveAtFloor = async (targetFloor: number) => {
   try {
     let elevator = await getElevatorStateFromDB()
 
-    const updates: Partial<IElevator> = {}
+    let updates: Partial<IElevator> = {}
 
     if (elevator.upQueue.includes(targetFloor)) {
       updates.upQueue = elevator.upQueue.filter(
@@ -215,15 +215,19 @@ const elevatorArriveAtFloor = async (targetFloor: number) => {
       doorsOpen: true
     })
 
+    updates = {}
+
     // Wait for 2 seconds to simulate door opening
     await delay(DOOR_OPEN_TIME * 1000)
 
     // Step 2: Door closes after another 2 seconds
     console.log(`Doors closing at floor ${targetFloor}...`)
 
+    elevator = await getElevatorStateFromDB()
+
     // Only update direction if there are remaining requests
     if (elevator.upQueue.length > 0 || elevator.downQueue.length > 0) {
-      const { direction, targetFloor } = getInitialDirection(elevator)
+      const { direction, targetFloor } = getDirectionAndTargetFloor(elevator)
       updates.direction = direction
       if (direction) {
         updates.moving = true

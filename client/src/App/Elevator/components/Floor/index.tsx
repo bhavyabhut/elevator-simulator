@@ -16,7 +16,7 @@ const Floor: React.FC<FloorProps> = ({
     totalFloors
 }) => {
     const directionIcon = direction ? direction === UP ? <FaArrowUp /> : <FaArrowDown /> : null;
-
+    const disabled = floorNumber === currentFloor;
     return (
         <div
             className="bg-gray-200 rounded-xl p-4 flex items-center justify-between mb-4 shadow-md"
@@ -39,14 +39,14 @@ const Floor: React.FC<FloorProps> = ({
                                 isUpPressed
                                     ? 'border bg-gradient-to-r from-green-400 to-green-200 border-indigo-400 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-purple-400 to-indigo-400 text-white'
-                            } shadow-lg`}
+                            } ${disabled && 'cursor-not-allowed'} shadow-lg`}
                             onClick={() => {
-                                if (!isUpPressed && floorNumber !== currentFloor) {
+                                if (!isUpPressed && !disabled) {
                                     moveElevator(floorNumber);
                                     handleButtonPress(floorNumber, UP);
                                 }
                             }}
-                            disabled={isUpPressed}>
+                            disabled={isUpPressed || disabled}>
                             <FaArrowUp />
                         </button>
                     )}
@@ -56,9 +56,9 @@ const Floor: React.FC<FloorProps> = ({
                                 isDownPressed
                                     ? 'border bg-gradient-to-r from-green-400 to-green-200 border-indigo-400 cursor-not-allowed'
                                     : 'bg-gradient-to-r from-purple-400 to-indigo-400 text-white'
-                            } shadow-lg`}
+                            } ${disabled && 'cursor-not-allowed'}  shadow-lg`}
                             onClick={() => {
-                                if (!isDownPressed && floorNumber !== currentFloor) {
+                                if (!isDownPressed && !disabled) {
                                     moveElevator(floorNumber);
                                     handleButtonPress(floorNumber, DOWN);
                                 }

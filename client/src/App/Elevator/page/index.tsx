@@ -6,14 +6,15 @@ import { Elevator } from '../../../types';
 import { fetchElevatorStateAPI, postElevatorCallAPI } from '../../../api';
 import LoadingScreen from '../components/Loading';
 import Building from '../components/Building';
+import { REFETCH_INTERVAL, STALE_TIME } from '../../../constant';
 
 const ElevatorSimulator = () => {
     const queryClient = useQueryClient();
     const { data: elevator, isLoading } = useQuery({
         queryKey: ['elevatorState'],
         queryFn: fetchElevatorStateAPI,
-        refetchInterval: 1000,
-        staleTime: 1000
+        refetchInterval: REFETCH_INTERVAL * 1000,
+        staleTime: STALE_TIME * 1000
     });
 
     const moveElevator = async (floor: number) => {
@@ -35,7 +36,7 @@ const ElevatorSimulator = () => {
         <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-gray-50 to-gray-200">
             <div className="flex space-x-8">
                 <div className="flex space-x-8">
-                    <div className="w-96 bg-white rounded-lg shadow-lg border border-gray-200">
+                    <div className="w-[500px] bg-white rounded-lg shadow-lg border border-gray-200">
                         <Building
                             totalFloors={totalFloors}
                             currentFloor={currentFloor}
