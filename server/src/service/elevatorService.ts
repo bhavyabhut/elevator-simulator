@@ -217,10 +217,8 @@ const elevatorArriveAtFloor = async (targetFloor: number) => {
 
     updates = {}
 
-    // Wait for 2 seconds to simulate door opening
     await delay(DOOR_OPEN_TIME * 1000)
 
-    // Step 2: Door closes after another 2 seconds
     console.log(`Doors closing at floor ${targetFloor}...`)
 
     elevator = await getElevatorStateFromDB()

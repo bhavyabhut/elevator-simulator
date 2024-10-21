@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
+
 import ElevatorBox from '../Box';
+
 import { TIME_TO_REACH_FLOOR, TOTAL_FLOOR_HEIGHT } from '../../../../constant';
 
 const ElevatorColumn = ({

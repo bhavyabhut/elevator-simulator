@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaArrowUp, FaArrowDown, FaDoorOpen, FaDoorClosed } from 'react-icons/fa';
+
 import { TIME_TO_REACH_FLOOR } from '../../../../constant';
 
 const ControlPanel = ({

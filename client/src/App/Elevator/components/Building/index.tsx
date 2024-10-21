@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TOTAL_FLOOR_HEIGHT } from '../../../../constant';
 import { Direction } from '../../../../types';
 import Floor from '../Floor';

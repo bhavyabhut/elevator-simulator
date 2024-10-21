@@ -2,10 +2,11 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ElevatorColumn from '../components/Column';
 import ControlPanel from '../components/ControlPanel';
-import { Elevator } from '../../../types';
-import { fetchElevatorStateAPI, postElevatorCallAPI } from '../../../api';
 import LoadingScreen from '../components/Loading';
 import Building from '../components/Building';
+
+import { Elevator } from '../../../types';
+import { fetchElevatorStateAPI, postElevatorCallAPI } from '../../../api';
 import { REFETCH_INTERVAL, STALE_TIME } from '../../../constant';
 
 const ElevatorSimulator = () => {
