@@ -1,7 +1,7 @@
 import Elevator, { IElevator } from '../models/elevatorModel'
 import { DOOR_OPEN_TIME, DOWN, TIME_TO_REACH_FLOOR, UP } from '../constant'
 import { MESSAGES } from '../constant/errors'
-import { delay } from '../utils'
+import { delay, isFloorInQueue } from '../utils'
 import { Direction } from '../types'
 
 const updateElevatorState = async (
@@ -40,19 +40,34 @@ export const addRequestToQueue = async (elevator: IElevator, floor: number) => {
   try {
     const updates: Partial<IElevator> = {}
 
-    if (elevator.currentFloor < floor && !elevator.upQueue.includes(floor)) {
+    if (elevator.currentFloor < floor && isFloorInQueue(elevator, floor)) {
       updates.upQueue = [...elevator.upQueue, floor].sort((a, b) => a - b)
     } else if (
       elevator.currentFloor > floor &&
-      !elevator.downQueue.includes(floor)
+      isFloorInQueue(elevator, floor)
     ) {
       updates.downQueue = [...elevator.downQueue, floor].sort((a, b) => b - a)
+    } else {
+      if (
+        elevator?.direction === UP &&
+        isFloorInQueue(elevator, floor) &&
+        elevator.currentFloor === floor
+      ) {
+        updates.downQueue = [...elevator.downQueue, floor].sort((a, b) => b - a)
+      } else if (
+        elevator?.direction === DOWN &&
+        isFloorInQueue(elevator, floor) &&
+        elevator.currentFloor === floor
+      ) {
+        updates.upQueue = [...elevator.upQueue, floor].sort((a, b) => a - b)
+      }
     }
     console.log('🚀 ~ addRequestToQueue ~ updates:', updates)
 
     if (Object.keys(updates).length > 0) {
       elevator = await updateElevatorState(updates)
       const { direction, targetFloor } = getDirectionAndTargetFloor(elevator)
+      console.log('🚀 ~ addRequestToQueue ~ direction:', direction, targetFloor)
 
       if (
         targetFloor === elevator.targetFloor &&
@@ -67,7 +82,7 @@ export const addRequestToQueue = async (elevator: IElevator, floor: number) => {
           targetFloor
         })
       else return elevator
-    }
+    } else return elevator
   } catch (error) {
     console.error('Error adding request to queue:', error)
   }
@@ -88,6 +103,26 @@ export const getDirectionAndTargetFloor = (
         ? Math.max(...elevator.downQueue)
         : -Infinity
 
+    if (elevator.moving) {
+      if (elevator.targetFloor === elevator.currentFloor) {
+        return {
+          direction: elevator.direction,
+          targetFloor: elevator.targetFloor
+        }
+      } else if (elevator.direction === UP) {
+        const nextUp = elevator.upQueue[0]
+        if (nextUp !== undefined) {
+          return { direction: UP, targetFloor: nextUp }
+        }
+      } else if (elevator.direction === DOWN) {
+        const nextDown = elevator.downQueue[0]
+        if (nextDown !== undefined) {
+          return { direction: DOWN, targetFloor: nextDown }
+        }
+      }
+    }
+
+    // Prioritize requests when elevator is not moving
     // If the closest down request is below the current floor, prioritize down
     if (
       closestDown < elevator.currentFloor &&
@@ -101,11 +136,17 @@ export const getDirectionAndTargetFloor = (
 
     // Prioritize the closest up request if it exists and is above the current floor
     if (closestUp > elevator.currentFloor) {
+      if (closestUp === Infinity) {
+        return { direction: null, targetFloor: null }
+      }
       return { direction: UP, targetFloor: closestUp }
     }
 
     // Otherwise, prioritize the closest down request if it's below the current floor
     if (closestDown < elevator.currentFloor) {
+      if (closestDown === -Infinity) {
+        return { direction: null, targetFloor: null }
+      }
       return { direction: DOWN, targetFloor: closestDown }
     }
 
